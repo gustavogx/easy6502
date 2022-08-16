@@ -4,50 +4,36 @@ layout: default
 
 <h2 id="intro">Introdução</h2>
 
-Neste curso introdutório eu vou ensinar os primeiros passos para escrever em linguagem assembly 6502. O processador 6502 foi um gigante dos anos 70 e 80, presente em máquinas como:
+Neste curso introdutório eu vou ensinar os primeiros passos para escrever em linguagem assembly 6502. Tudo o que você vê aqui existe graças ao [Nick Morgam](http://skilldrick.co.uk). Dentro da licença deste material, eu traduzi e adaptei o [original](https://github.com/skilldrick/easy6502) para o contexto deste curso.
+
+Este curso **não é** para ensinar programação em jogos de NES/Famicom. Porém, é uma intrudução imperdível caso seja este o seu objetivo.
+
+O processador 6502 foi um gigante dos anos 70 e 80, presente em máquinas como:
 
 [BBC Micro](http://en.wikipedia.org/wiki/BBC_Micro),
 [Atari 2600](http://en.wikipedia.org/wiki/Atari_2600),
 [Commodore 64](http://en.wikipedia.org/wiki/Commodore_64),
-[Apple II](http://en.wikipedia.org/wiki/Apple_II), and the [Nintendo Entertainment
+[Apple II](http://en.wikipedia.org/wiki/Apple_II), e o [Nintendo Entertainment
 System](http://en.wikipedia.org/wiki/Nintendo_Entertainment_System). 
 
-O Bender do Futurama [tem um 6502 como cérebro](http://www.transbyte.org/SID/SID-files/Bender_6502.jpg). 
-[E até o Exterminador do Futuro foi programado em 6502](http://www.pagetable.com/docs/terminator/00-37-23.jpg).
+O Bender do Futurama [tem um 6502 como cérebro](http://www.transbyte.org/SID/SID-files/Bender_6502.jpg).
+
+[Até o Exterminador do Futuro foi programado em 6502](http://www.pagetable.com/docs/terminator/00-37-23.jpg).
 
 
-So, why would you want to learn 6502? It's a dead language isn't it? Well,
-so's Latin. And they still teach that.
-[Q.E.D.](http://en.wikipedia.org/wiki/Q.E.D.)
+Então, mesmo assim por que você iria querer aprender 6502?
 
-(Actually, I've been reliably informed that 6502 processors are still being
-produced by [Western Design Center](http://www.westerndesigncenter.com/wdc/w65c02s-chip.cfm)
-and [sold to hobbyists](http://www.mouser.co.uk/Search/Refine.aspx?Keyword=65C02), so clearly 6502
-*isn't* a dead language! Who knew?)
+Com a ascensão do fenômeno retro-gaming, fazer novos jogos para máquinas antigas está em moda. 
+Mesmo com as ferramentas mais modernas, o conhecimento da linguagem fundamental da máquina é essencial para extrair todo o suco que esses chips de 40 anos têm a oferecer (sério... em 2025 o 6502 faz 50 anos!). 
 
-Seriously though, I think it's valuable to have an understanding of assembly
-language. Assembly language is the lowest level of abstraction in computers -
-the point at which the code is still readable. Assembly language translates
-directly to the bytes that are executed by your computer's processor.
-If you understand how it works, you've basically become a computer
-[magician](http://skilldrick.co.uk/2011/04/magic-in-software-development/).
+Além disso, o 6502 ainda é fabricado [Western Design Center](http://www.westerndesigncenter.com/wdc/w65c02s-chip.cfm) e pode ser comprado em praticamente qualquer lugar, o que é muito conveniente.
 
-Then why 6502? Why not a *useful* assembly language, like
-[x86](http://en.wikipedia.org/wiki/X86)? Well, I don't think learning x86 is
-useful. I don't think you'll ever have to *write* assembly language in your day
-job - this is purely an academic exercise, something to expand your mind and
-your thinking. 6502 was originally written in a different age, a time when the majority of
-developers were writing assembly directly, rather than in these new-fangled
-high-level programming languages. So, it was designed to be written by humans.
-More modern assembly languages are meant to written by compilers, so let's
-leave it to them. Plus, 6502 is *fun*. Nobody ever called x86 *fun*.
+Mas a melhor razão eu guardei por último: no mundo da programação de jogos modernos, há quem use as comodidades do Unity, UE, Godot, entre muitos outros. Estes motores democratizaram a criação de publicação de jogos, o que é sensacional. Mas neste meio saber programação te da o poder de torcer e espremer estas plataformas à sua vontade. Mas se você tem uma compreensão razoável de assembly você passa a ver estas ferramentas com outros olhos pois você entende a organização do silício onde seu programa está rodando. Não há exagero em dizer que um pouquinho de assembly vai te transformar num verdadeiro mago dos jogos. Neste sentido o 6502 é um bom começo pois de um assembly antigo para um moderno o que muda é a complexidade das CPUs, mas a filosofia continua a mesma.
 
+<h2 id="first-program">Nosso primeiro programa</h2>
 
-<h2 id="first-program">Our first program</h2>
-
-So, let's dive in! That thing below is a little [JavaScript 6502 assembler and
-simulator](https://github.com/skilldrick/6502js) that I adapted for this book.
-Click **Assemble** then **Run** to assemble and run the snippet of assembly language.
+Opa, então vamos mergulhar nessa de cabeça! Essa coisinha aí em baixo é um pequeno [Simulador e montador 6502 em JavaScript](https://github.com/skilldrick/6502js) que o grande [Nick Morgan](http://skilldrick.co.uk/) adaptou para este curso.
+Clique **Assemble** e depois **Run** para montar e rodar o pedaço de código assembly.
 
 {% include start.html %}
 LDA #$01
@@ -58,9 +44,8 @@ LDA #$08
 STA $0202
 {% include end.html %}
 
-Hopefully the black area on the right now has three coloured "pixels" at the
-top left. (If this doesn't work, you'll probably need to upgrade your browser to
-something more modern, like Chrome or Firefox.)
+Com sorte, a área preta à direita (representando um monitor) tem agora 3 pixels coloridos no canto superior esquerdo.
+(Se não tiver, talvez você precise atualizar seu browser para algo mais moderno como Chrome, Edge ou Firefox)
 
 So, what's this program actually doing? Let's step through it with the
 debugger. Hit **Reset**, then check the **Debugger** checkbox to start the
