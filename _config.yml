@@ -2,3 +2,9 @@ safe: true
 lsi: false
 markdown: kramdown
 highlighter: rouge
+
+title: Easy6502
+description: 
+google_analytics: UA-3174668-13
+show_downloads: true
+theme: jekyll-theme-hacker
