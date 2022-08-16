@@ -27,7 +27,7 @@ Mesmo com as ferramentas mais modernas, o conhecimento da linguagem fundamental 
 
 Além disso, o 6502 ainda é fabricado [Western Design Center](http://www.westerndesigncenter.com/wdc/w65c02s-chip.cfm) e pode ser comprado em praticamente qualquer lugar, o que é muito conveniente.
 
-Nas prṕoximas horas veremos as instruções básicas do 6502 em uma plataforma fictícia, na forma de um simulador desenvolvido por [Stian Søreng](http://www.6502asm.com). Nele você pode simular quase toda a lógica do 6502 (exceto interrupções) e produzir gráficos numa tela de 32x32 pixels com 16 cores (a mesma paleta do Comodore 64). Isto possibilita aprender a lidar com a CPU sem ter que preocupar com chips periféricos, como *PPU*s, *APU*s e *mappers*, por exemplo.
+Nas prṕoximas horas veremos as instruções básicas do 6502 em uma plataforma fictícia, na forma de um simulador desenvolvido por [Stian Søreng](http://www.6502asm.com). Nele você pode simular quase toda a lógica do 6502 (exceto interrupções) e produzir gráficos numa tela de 32x32 pixels com 16 cores (a mesma paleta do Comodore 64). Isto possibilita aprender a lidar com a CPU sem ter que preocupar com chips periféricos, como *PPU*s, *APU*s e *mappers*, por exemplo. Se depois de terminar esta aula você estiver se sentindo aventureiro, [acesse o simulador](http://www.6502asm.com/index.html) ou quem sabe a [versão beta](http://www.6502asm.com/beta/index.html), ambos com diversos exemplos para explorar.
 
 Este curso **não é** para ensinar programação em jogos de NES/Famicom. Porém, é uma intrudução imperdível caso seja este o seu objetivo. Pense assim: para um dia ser um programador de jogos para NES/Famicom você terá que saber não só assembly 6502 como também conhecer a arquitetura do console e dos cartuchos. Hoje é o proverbial **primeiro passo** dessa jornada.
 
@@ -53,34 +53,24 @@ Com sorte, a área preta à direita (representando um monitor) tem agora 3 pixel
 Certo, então o que este programa está realmente fazendo? Vamos fazer um passo-a-passo no depurador (*debugger*).
 Pressione **Reset**, depois acione o **Debugger** para dar início à depuração. Clique em **Step** uma única vez e preste bastante atenção às mudanças: o programa vai avançar uma instrução e `A=` mudou de `$00` para `$01`, enquanto `PC=` mudou de `$0600` para `$0602`.
 
-Any numbers prefixed with `$` in 6502 assembly language (and by extension, in
-this book) are in hexadecimal (hex) format. If you're not familiar with hex
-numbers, I recommend you read [the Wikipedia
-article](http://en.wikipedia.org/wiki/Hexadecimal). Anything prefixed with `#`
-is a literal number value. Any other number refers to a memory location.
+Qualquer número precedido por `$` estão no **formato hexadecimal**. Se você não conhece, eu recomendo uma lida com mais atenção na [Wikipedia](https://pt.wikipedia.org/wiki/Sistema_de_numera%C3%A7%C3%A3o_hexadecimal). Alẽm disso, valores precedidos de `#`são valores literais, enquanto que aqueles que não tem `#` se referem à endereços de memória.
 
-Equipped with that knowledge, you should be able to see that the instruction
-`LDA #$01` loads the hex value `$01` into register `A`. I'll go into more
-detail on registers in the next section.
+De posse desse conhecimento, você deve ser capaz de identificar a instrução 
+`LDA #$01` carregou o valor `$01` (lembre-se, `#` indica um valor literal) no registro `A`. Eu vou dar mais detalhes sobre o que são registros na próxima seção. Por hora, pense que é uma caixinha onde a CPU guarda valores temporariamente.
 
-Press **Step** again to execute the second instruction. The top-left pixel of
-the simulator display should now be white. This simulator uses the memory
-locations `$0200` to `$05ff` to draw pixels on its display. The values `$00` to
-`$0f` represent 16 different colours (`$00` is black and `$01` is white), so
-storing the value `$01` at memory location `$0200` draws a white pixel at the
-top left corner. This is simpler than how an actual computer would output
-video, but it'll do for now.
+Pressione **Step** mais uma vez para exeecutar a segunda intrução. O canto superior esquerdo da nossa telinha deve estar mostrando um pixel branco. Neste computador de faz-de-conta, os endereços de memória localizados entre `$0200` à `$05ff` estão mapeados com os 1024 pixels da tela (32x32). Pense nesta região da memória como sendo a **memória de vídeo** do nosso computador/console. Inicialmente todos estão pretos (valem `$00`) e cada valor consecutivo de `$01` até `$0f` representa uma das cores de uma paleta pré-definida (`$00` é preto e `$01` é branco, e assim vai). Os pixels são mapeados em sequência, então `$0200` + `$20` = `$0220` representa o primeiro pixel da seguna linha (`$20` é 32 em hexa). Esta arquitetura é muito mais simples do que um computador real (mesmo naquela época), mas não se engane! Este exemplo é muito mais importante do que possa parecer: se cada pixel é um endereço de memória e cada cor é um valor, podemos explorar este recurso para aprender como manipular a memória e nos acostumar com aritimética hexadecimal. 
 
-So, the instruction `STA $0200` stores the value of the `A` register to memory
-location `$0200`. Click **Step** four more times to execute the rest of the
-instructions, keeping an eye on the `A` register as it changes.
+Então, a instrução `STA $0200` guarda o valor que estava temporariamente no registro `A` no endereço de memória `$0200` (repare que `$0200` não tem `#`, então não é um valor, mas sim um endereço). Clique em **Step** mais quatro vezes para executar o resto das instruções. Fique de olho em `A` e observe como ele muda a cada passo.
 
-### Exercises ###
+### Exercícios ###
 
-1. Try changing the colour of the three pixels.
-2. Change one of the pixels to draw at the bottom-right corner (memory location `$05ff`).
-3. Add more instructions to draw extra pixels.
+1. Explore a paleta de 16 cores e tente mudar as cores dos pixels.
 
+2. Mude alguns pixel em outra parte da tela. Digamos, no canto inferior direito? (endereço `$05ff`).
+
+3. Adicione mais instruções para desenhar mais pixels.
+
+4. Para pensar: para uma tela de 256x240 pixel (uma resolução comum nos anos 80 época), quanto de memória seria necessário para manter este mesmo esquema de mapeamento de vídeo? Quando chegar na resposta, reflita sobre isso: o 6502 consegue endereçar somente 65536 valores diferentes (também conhecido como 64k).
 
 <h2 id='registers'>Registers and flags</h2>
 
