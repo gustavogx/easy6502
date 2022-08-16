@@ -6,7 +6,6 @@ layout: default
 
 Neste curso introdutório eu vou ensinar os primeiros passos para escrever em linguagem assembly 6502. Tudo o que você vê aqui existe graças ao [Nick Morgam](http://skilldrick.co.uk). Dentro da licença deste material, eu traduzi e adaptei o [original](https://github.com/skilldrick/easy6502) para o contexto deste curso.
 
-Este curso **não é** para ensinar programação em jogos de NES/Famicom. Porém, é uma intrudução imperdível caso seja este o seu objetivo.
 
 O processador 6502 foi um gigante dos anos 70 e 80, presente em máquinas como:
 
@@ -24,9 +23,13 @@ O Bender do Futurama [tem um 6502 como cérebro](http://www.transbyte.org/SID/SI
 Então, mesmo assim por que você iria querer aprender 6502?
 
 Com a ascensão do fenômeno retro-gaming, fazer novos jogos para máquinas antigas está em moda. 
-Mesmo com as ferramentas mais modernas, o conhecimento da linguagem fundamental da máquina é essencial para extrair todo o suco que esses chips de 40 anos têm a oferecer (sério... em 2025 o 6502 faz 50 anos!). 
+Mesmo com as ferramentas mais modernas, o conhecimento da linguagem fundamental da máquina é essencial para extrair todo o suco que esses chips de 40 anos têm a oferecer. (em 2025 o 6502 faz 50 anos!) 
 
 Além disso, o 6502 ainda é fabricado [Western Design Center](http://www.westerndesigncenter.com/wdc/w65c02s-chip.cfm) e pode ser comprado em praticamente qualquer lugar, o que é muito conveniente.
+
+Nas prṕoximas horas veremos as instruções básicas do 6502 em uma plataforma fictícia, na forma de um simulador desenvolvido por [Stian Søreng](http://www.6502asm.com). Nele você pode simular quase toda a lógica do 6502 (exceto interrupções) e produzir gráficos numa tela de 32x32 pixels com 16 cores (a mesma paleta do Comodore 64). Isto possibilita aprender a lidar com a CPU sem ter que preocupar com chips periféricos, como *PPU*s, *APU*s e *mappers*, por exemplo.
+
+Este curso **não é** para ensinar programação em jogos de NES/Famicom. Porém, é uma intrudução imperdível caso seja este o seu objetivo. Pense assim: para um dia ser um programador de jogos para NES/Famicom você terá que saber não só assembly 6502 como também conhecer a arquitetura do console e dos cartuchos. Hoje é o proverbial **primeiro passo** dessa jornada.
 
 Mas a melhor razão eu guardei por último: no mundo da programação de jogos modernos, há quem use as comodidades do Unity, UE, Godot, entre muitos outros. Estes motores democratizaram a criação de publicação de jogos, o que é sensacional. Mas neste meio saber programação te da o poder de torcer e espremer estas plataformas à sua vontade. Mas se você tem uma compreensão razoável de assembly você passa a ver estas ferramentas com outros olhos pois você entende a organização do silício onde seu programa está rodando. Não há exagero em dizer que um pouquinho de assembly vai te transformar num verdadeiro mago dos jogos. Neste sentido o 6502 é um bom começo pois de um assembly antigo para um moderno o que muda é a complexidade das CPUs, mas a filosofia continua a mesma.
 
@@ -47,11 +50,8 @@ STA $0202
 Com sorte, a área preta à direita (representando um monitor) tem agora 3 pixels coloridos no canto superior esquerdo.
 (Se não tiver, talvez você precise atualizar seu browser para algo mais moderno como Chrome, Edge ou Firefox)
 
-So, what's this program actually doing? Let's step through it with the
-debugger. Hit **Reset**, then check the **Debugger** checkbox to start the
-debugger. Click **Step** once. If you were watching carefully, you'll have
-noticed that `A=` changed from `$00` to `$01`, and `PC=` changed from `$0600` to
-`$0602`.
+Certo, então o que este programa está realmente fazendo? Vamos fazer um passo-a-passo no depurador (*debugger*).
+Pressione **Reset**, depois acione o **Debugger** para dar início à depuração. Clique em **Step** uma única vez e preste bastante atenção às mudanças: o programa vai avançar uma instrução e `A=` mudou de `$00` para `$01`, enquanto `PC=` mudou de `$0600` para `$0602`.
 
 Any numbers prefixed with `$` in 6502 assembly language (and by extension, in
 this book) are in hexadecimal (hex) format. If you're not familiar with hex
