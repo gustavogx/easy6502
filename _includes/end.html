@@ -5,11 +5,11 @@
 
   <div class="debugger">
     <input type="checkbox" class="debug" name="debug" />
-    <label for="debug">Debugger</label>
+    <label for="debug">Depurador</label>
     <div class="minidebugger"></div>
     <div class="buttons">
-      <input type="button" value="Step" class="stepButton" />
-      <input type="button" value="Jump to..." class="gotoButton" />
+      <input type="button" value="Um paço" class="stepButton" />
+      <input type="button" value="Pule para..." class="gotoButton" />
     </div>
   </div>
 
@@ -18,37 +18,38 @@
     <input type="checkbox" class="monitoring" name="monitoring" />
 
     <label for="start">Start: $</label>
-    <input type="text" value="0" class="start" name="start" />
+    <input type="text" value="0" class="start" name="início" />
     <label for="length">Length: $</label>
-    <input type="text" value="ff" class="length" name="length" />
+    <input type="text" value="ff" class="length" name="tamanho" />
   </div>
 
   <div class="monitor"><pre><code></code></pre></div>
   <div class="messages"><pre><code></code></pre></div>
 
-  <div class="notes" style="display: none">Notes:
+  <div class="notes" style="display: none">Notas:
 
-Memory location $fe contains a new random byte on every instruction.
-Memory location $ff contains the ascii code of the last key pressed.
+A posição de memória $fe contém alguns bytes aleatórios a cada instrução.
+A posição de memória $ff contém o código ascii para a última tecla pessionada.
+  
+As posições de memória $200 até $5ff estão mapeadas nos píxels da tela.
+Valores diferentes produzem pixels de cores diferentes.
+As cores são:
 
-Memory locations $200 to $5ff map to the screen pixels. Different values will
-draw different colour pixels. The colours are:
-
-$0: Black
-$1: White
-$2: Red
-$3: Cyan
-$4: Purple
-$5: Green
-$6: Blue
-$7: Yellow
-$8: Orange
-$9: Brown
-$a: Light red
-$b: Dark grey
-$c: Grey
-$d: Light green
-$e: Light blue
-$f: Light grey
+$0: Preto
+$1: Branco
+$2: Vermelho
+$3: Ciano
+$4: Roxo
+$5: Verde
+$6: Azul
+$7: Amarelo
+$8: Laranja
+$9: Marrom
+$a: Vermelho Claro
+$b: Cinza Escuro
+$c: Cinza
+$d: Verde Claro
+$e: Azul Claro
+$f: Cinza Claro
     </div>
 </div>
