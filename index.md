@@ -2,20 +2,19 @@
 layout: default
 ---
 
-<h2 id="intro">Introduction</h2>
+<h2 id="intro">Introdução</h2>
 
-In this tiny ebook I'm going to show you how to get started writing 6502
-assembly language. The 6502 processor was massive in the seventies and
-eighties, powering famous computers like the
+Neste curso introdutório eu vou ensinar os primeiros passos para escrever em linguagem assembly 6502. O processador 6502 foi um gigante dos anos 70 e 80, presente em máquinas como:
+
 [BBC Micro](http://en.wikipedia.org/wiki/BBC_Micro),
 [Atari 2600](http://en.wikipedia.org/wiki/Atari_2600),
 [Commodore 64](http://en.wikipedia.org/wiki/Commodore_64),
 [Apple II](http://en.wikipedia.org/wiki/Apple_II), and the [Nintendo Entertainment
-System](http://en.wikipedia.org/wiki/Nintendo_Entertainment_System). Bender in
-Futurama [has a 6502 processor for a
-brain](http://www.transbyte.org/SID/SID-files/Bender_6502.jpg). [Even the
-Terminator was programmed in
-6502](http://www.pagetable.com/docs/terminator/00-37-23.jpg).
+System](http://en.wikipedia.org/wiki/Nintendo_Entertainment_System). 
+
+O Bender do Futurama [tem um 6502 como cérebro](http://www.transbyte.org/SID/SID-files/Bender_6502.jpg). 
+[E até o Exterminador do Futuro foi programado em 6502](http://www.pagetable.com/docs/terminator/00-37-23.jpg).
+
 
 So, why would you want to learn 6502? It's a dead language isn't it? Well,
 so's Latin. And they still teach that.
