@@ -54,7 +54,7 @@ Com sorte, a área preta à direita (representando um monitor) tem agora 3 pixel
 Certo, então o que este programa está realmente fazendo? Vamos fazer um passo-a-passo no depurador (*debugger*).
 Pressione **Reset**, depois acione o **Debugger** para dar início à depuração. Clique em **Step** uma única vez e preste bastante atenção às mudanças: o programa vai avançar uma instrução e `A=` mudou de `$00` para `$01`, enquanto `PC=` mudou de `$0600` para `$0602`.
 
-Qualquer número precedido por `$` estão no **formato hexadecimal**. Se você não conhece, eu recomendo uma lida com mais atenção na [Wikipedia](https://pt.wikipedia.org/wiki/Sistema_de_numera%C3%A7%C3%A3o_hexadecimal). Alẽm disso, valores precedidos de `#`são valores literais, enquanto que aqueles que não tem `#` se referem à endereços de memória.
+Qualquer número precedido por `$` estão no **formato hexadecimal**. Se você não conhece, eu recomendo uma lida com mais atenção na [Wikipedia](https://pt.wikipedia.org/wiki/Sistema_de_numera%C3%A7%C3%A3o_hexadecimal). Além disso, valores precedidos de `#`são valores literais, enquanto que aqueles que não tem `#` se referem à endereços de memória.
 
 De posse desse conhecimento, você deve ser capaz de identificar a instrução 
 `LDA #$01` carregou o valor `$01` (lembre-se, `#` indica um valor literal) no registro `A`. Eu vou dar mais detalhes sobre o que são registros na próxima seção. Por hora, pense que é uma caixinha onde a CPU guarda valores temporariamente.
