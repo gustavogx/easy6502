@@ -6,7 +6,6 @@ layout: default
 
 Neste curso introdutório eu vou ensinar os primeiros passos para escrever em linguagem assembly 6502. Tudo o que você vê aqui existe graças ao [Nick Morgam](http://skilldrick.co.uk). Dentro da licença deste material, eu traduzi e adaptei o [original](https://github.com/skilldrick/easy6502) para o contexto deste curso.
 
-
 O processador 6502 foi um gigante dos anos 70 e 80, presente em máquinas como:
 
 [BBC Micro](http://en.wikipedia.org/wiki/BBC_Micro),
@@ -17,7 +16,7 @@ System](http://en.wikipedia.org/wiki/Nintendo_Entertainment_System).
 
 O Bender do Futurama [tem um 6502 como cérebro](http://www.transbyte.org/SID/SID-files/Bender_6502.jpg).
 
-[Até o Exterminador do Futuro foi programado em 6502](http://www.pagetable.com/docs/terminator/00-37-23.jpg).
+Até o Exterminador do Futuro [foi programado em 6502](http://www.pagetable.com/docs/terminator/00-37-23.jpg).
 
 
 Então, mesmo assim por que você iria querer aprender 6502?
@@ -72,28 +71,19 @@ Então, a instrução `STA $0200` guarda o valor que estava temporariamente no r
 
 4. Para pensar: para uma tela de 256x240 pixel (uma resolução comum nos anos 80 época), quanto de memória seria necessário para manter este mesmo esquema de mapeamento de vídeo? Quando chegar na resposta, reflita sobre isso: o 6502 consegue endereçar somente 65536 valores diferentes (também conhecido como 64k).
 
-<h2 id='registers'>Registers and flags</h2>
+<h2 id='registers'>Registros e flags</h2>
 
-We've already had a little look at the processor status section (the bit with
-`A`, `PC` etc.), but what does it all mean?
+Nós já vimos um pouco do que há por dentro do processador, aquela parte sobre 
+`A`, `PC`, etc.), mas o que isso significa?
 
-The first line shows the `A`, `X` and `Y` registers (`A` is often called the
-"accumulator"). Each register holds a single byte. Most operations work on the
-contents of these registers.
+A primeira linha mostra os **registros** `A`, `X` e `Y`. Pense no significado da palavra registro: uma anotação, uma informação guardada. O 6502 tem apenas três registros, `A`, `X` e `Y`, que são três espaços para guardar valores temporariamente. Cada um deles é capaz de guardar 1 byte de informação (um valor hexa entre `$00` e `$ff`) e estes valores são utilizados em nossos programas. O `A` é chamado **acumulador**, enquanto `X` e `Y` são contadores. Eles podem ser úteis em diversas situações mas não pense que são idênticos. Cada um têm suas próprias características e domniná-las será essencial.
 
-`SP` is the stack pointer. I won't get into the stack yet, but basically this
-register is decremented every time a byte is pushed onto the stack, and
-incremented when a byte is popped off the stack.
+`SP` significa *stack pointer*, ou ponteiro da pilha. Eu não vou falar da pilha ainda, mas por hora basta dizer que é uma região da memória e que o `SP`
+indica uma posição nesta memória, aumentando ou diminuindo a cada byte que é adicionado ou removido dela.
 
-`PC` is the program counter - it's how the processor knows at what point in the
-program it currently is. It's like the current line number of an executing
-script. In the JavaScript simulator the code is assembled starting at memory
-location `$0600`, so `PC` always starts there.
+`PC` é o contador de programa. É a forma como o processador sabe em que ponto do programa ele está. O programa é executado em sequência, uma instrução de cada vez, com `PC`sempre indicando o endereço da instrução a ser executada. Nós temos certo controle sobre `PC`, o que significa que podemos pular instruções, voltar, ou ir para outra parte completamente diferente do programa. Em nosso computador de faz-de-conta, `PC` sempre começa no endereço `$0600`. Este é o endereço onde o 6502 espera encontrar o início do programa. O endereço inicial é diferente em outras máquinas, mas ele sempre existe. Quando for aplicar esta lição ao NES ou ao C64, lembre-se de pesquisar onde o `PC` começa naquela máquina.
 
-The last section shows the processor flags. Each flag is one bit, so all seven
-flags live in a single byte. The flags are set by the processor to give
-information about the previous instruction. More on that later. [Read more
-about the registers and flags here](http://www.obelisk.me.uk/6502/registers.html).
+Por último, vamos falar sobre *flags*. Imagine os bandeirinhas do fotebol, prontos a levantar uma bandeira para mostrar ao árbitro de campo algo que ele pode não ter visto. É a mesma coisa: as flags, ou bandeiras, são sinais de que algo aconteceu dentro da CPU, fora do nosso campo de visão. O 6502 tem 7 flags e cada uma é apenas um bit (0 ou 1). Ou seja, todas vivem dentro de um único byte. Veremos mais sobre flags em alguns minutos.
 
 
 <h2 id='instructions'>Instructions</h2>
