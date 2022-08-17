@@ -28,7 +28,7 @@ Além disso, o 6502 ainda é fabricado [Western Design Center](http://www.wester
 
 Nas próximas horas veremos as instruções básicas do 6502 em uma plataforma fictícia, na forma de um simulador desenvolvido por [Stian Søreng](http://www.6502asm.com). Nele você pode simular quase toda a lógica do 6502 (exceto interrupções) e produzir gráficos numa tela de 32x32 pixels com 16 cores (a mesma paleta do Comodore 64). Isto possibilita aprender a lidar com a CPU sem ter que preocupar com chips periféricos, como *PPU*s, *APU*s e *mappers*, por exemplo. Se depois de terminar esta aula você estiver se sentindo aventureiro, [acesse o simulador](http://www.6502asm.com/index.html) ou quem sabe a [versão beta](http://www.6502asm.com/beta/index.html), ambos com diversos exemplos para explorar.
 
-Este curso **não é** para ensinar programação em jogos de NES/Famicom. Porém, é uma intrudução imperdível caso seja este o seu objetivo. Pense assim: para um dia ser um programador de jogos para NES/Famicom você terá que saber não só assembly 6502 como também conhecer a arquitetura do console e dos cartuchos. Hoje é o proverbial **primeiro passo** dessa jornada.
+Este curso **não é** para ensinar programação em jogos de NES/Famicom. Porém, é uma introdução imperdível caso seja este o seu objetivo. Pense assim: para um dia ser um programador de jogos para NES/Famicom você terá que saber não só assembly 6502 como também conhecer a arquitetura do console e dos cartuchos. Hoje é o proverbial **primeiro passo** dessa jornada.
 
 Mas a melhor razão eu guardei por último: no mundo da programação de jogos modernos, há quem use as comodidades do Unity, UE, Godot, entre muitos outros. Estes motores democratizaram a criação de publicação de jogos, o que é sensacional. Mas neste meio saber programação te da o poder de torcer e espremer estas plataformas à sua vontade. Mas se você tem uma compreensão razoável de assembly você passa a ver estas ferramentas com outros olhos pois você entende a organização do silício onde seu programa está rodando. Não há exagero em dizer que um pouquinho de assembly vai te transformar num verdadeiro mago dos jogos. Neste sentido o 6502 é um bom começo pois de um assembly antigo para um moderno o que muda é a complexidade das CPUs, mas a filosofia continua a mesma.
 
@@ -63,6 +63,12 @@ Pressione **Step** mais uma vez para exeecutar a segunda intrução. O canto sup
 
 Então, a instrução `STA $0200` guarda o valor que estava temporariamente no registro `A` no endereço de memória `$0200` (repare que `$0200` não tem `#`, então não é um valor, mas sim um endereço). Clique em **Step** mais quatro vezes para executar o resto das instruções. Fique de olho em `A` e observe como ele muda a cada passo.
 
+### Para refletir ###
+
+1. *Assemble* significa montar e *assembly* é um substantivo derivado, algo como uma montagem. Se você já ouviu falar em *compilar um programa*, então saiba que compilação e montagem não são parecidas em nada! As instruções que usamos dara dar ordens à CPU são escritar com letras como `LDA`e `STA` para ficar mais fácil para nós humanos, mas na real estas ordens são números. O programa inteiro é feito apenas por números! Se você clicar em **Hexdump** no simulador vai ver uma janelinha com uma sequência de número em hexa. Aquele é o programa. É isso que vai gravado em um cartucho. O programa escrito em palavras legíveis é chamado de *assembly* (por isso o nome assembly 6502), processo de trocar as palavras pelos números é chamado de *assembling*, e o programa que faz essa troca é chamado de *assembler*.   
+
+2. Para uma tela de 256x256 pixels (próxima às resoluções mais comuns nos anos 80), quanto de memória seria necessário para manter este mesmo esquema de mapeamento de vídeo? Quando chegar na resposta, reflita sobre isso: o 6502 consegue endereçar somente 65536 valores diferentes (também conhecido como 64k).
+
 ### Exercícios ###
 
 1. Explore a paleta de 16 cores e tente mudar as cores dos pixels.
@@ -70,8 +76,6 @@ Então, a instrução `STA $0200` guarda o valor que estava temporariamente no r
 2. Mude alguns pixel em outra parte da tela. Digamos, no canto inferior direito? (endereço `$05ff`).
 
 3. Adicione mais instruções para desenhar mais pixels.
-
-4. Para pensar: para uma tela de 256x240 pixel (uma resolução comum nos anos 80 época), quanto de memória seria necessário para manter este mesmo esquema de mapeamento de vídeo? Quando chegar na resposta, reflita sobre isso: o 6502 consegue endereçar somente 65536 valores diferentes (também conhecido como 64k).
 
 <h2 id='registers'>Registros e flags</h2>
 
