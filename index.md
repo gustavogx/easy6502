@@ -92,32 +92,28 @@ indica uma posição nesta memória, aumentando ou diminuindo a cada byte que é
 Por último, vamos falar sobre *flags*. Imagine os bandeirinhas do fotebol, prontos a levantar uma bandeira para mostrar ao árbitro de campo algo que ele pode não ter visto. É a mesma coisa: as flags, ou bandeiras, são sinais de que algo aconteceu dentro da CPU, fora do nosso campo de visão. O 6502 tem 7 flags e cada uma é apenas um bit (0 ou 1). Ou seja, todas vivem dentro de um único byte. Veremos mais sobre flags em alguns minutos.
 
 
-<h2 id='instructions'>Instructions</h2>
+<h2 id='instructions'>Instruções</h2>
 
-Instructions in assembly language are like a small set of predefined functions.
-All instructions take zero or one arguments. Here's some annotated
-source code to introduce a few different instructions:
+Instruções são ordens que você dá ao processador. No caso do 6502, existem 56 instruções. Nosso trabalho é compreender como o processador responde a cada uma delas.
+Algumas instruções fazem o processador agir sobre um valor, outras fazem ele agir sobre um endereço da memória e algumas controlam o andamento do programa.
+
+Vejamos este pedaço de programa com algumas instruções comentadas:
 
 {% include start.html %}
-LDA #$c0  ;Load the hex value $c0 into the A register
-TAX       ;Transfer the value in the A register to X
-INX       ;Increment the value in the X register
-ADC #$c4  ;Add the hex value $c4 to the A register
-BRK       ;Break - we're done
+LDA #$c0  ; Carrega o valor hex $c0 em A
+TAX       ; Transfere o valor de A para X
+INX       ; Incrementa o valor em X
+ADC #$c4  ; Soma o valor hex $c4 em A
+BRK       ; Break - fim do programa
 {% include end.html %}
 
-Assemble the code, then turn on the debugger and step through the code, watching
-the `A` and `X` registers. Something slightly odd happens on the line `ADC #$c4`.
-You might expect that adding `$c4` to `$c0` would give `$184`, but this
-processor gives the result as `$84`. What's up with that?
+Monte o programa e acione o depurador (debugger) e avance passo a passo (step), prestando atenção aos registros `A` e `X`. 
+Algo estranho acontece na linha `ADC #$c4`. Pense nisso: a soma de `$c4` (192) com `$c0` (192) daria `$184` (388), mas o processador diz que é `$84`. 
+O que está acontecendo aqui?
 
-The problem is, `$184` is too big to fit in a single byte (the max is `$FF`),
-and the registers can only hold a single byte.  It's OK though; the processor
-isn't actually dumb. If you were looking carefully enough, you'll have noticed
-that the carry flag was set to `1` after this operation. So that's how you
-know.
+O problema é que `$184` é muito grande para caber em um único byte (o máximo `$FF`, ou 255). Mas tudo vai ficar bem... o processador não é tão burro assim. Se você observar a flag `C` (carry) vai ver que ela mudou de `0` para `1`. Em inglês, a palavra *carry* é equivalente ao nosso *vai um* quando fazemos somas na mão (você ainda lembra como faz?). Então, o resultado completo da soma de `$c4` com `$c0` é `$84`, e "vai um" (`$184`).
 
-In the simulator below **type** (don't paste) the following code:
+No simulador abaixo **digite** (não copie e cole) as seguintes instruções:
 
     LDA #$80
     STA $01
