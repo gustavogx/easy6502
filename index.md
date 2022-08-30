@@ -192,86 +192,90 @@ Lembre-se que um byte é representado por dois caracteres em hex, então um ende
 $ffff`. Você já foi apresentado aos endereços que representam a memória de vídeo do nosso simulador (`$0200 - $05ff`) e o nosso programa que sempre começa em `$0600`.  
 Existem várias formas de se referir a estes endereços. Quanto mais você dominar estas formas de endereçamento, mais eficiente será seu código. Durante os exemplos a seguir, usem o monitor de memória para acompanhar como cada endereço é afetado. Configure o monitor para apontar para a faixa de endereços que você está estudando, ou não conseguirá ver os efeitos das instruções. Por exemplo, para mostrar os primeiros 16 bytes que começam em `$c000`, entre `c000` no **Start** e `10` no **Length**, respectivamente.
 
-### Absolute: `$c000` ###
+### Imediato: `#$c0` ###
 
-With absolute addressing, the full memory location is used as the argument to the instruction. For example:
+O primeiro não é realmente um endereçamento pois não está lidando com a memória, mas sim somente com os registros. São os casos onde você passa um valor numérico (constante) para um registro. Por exemplo, `LDX #$01` carrega o valor `$01` no registro `X`. É preciso muita atenção para não confundir isso com o endereçamento da **Página Zero** que veremos em breve. Tenha isso em mente. 
 
-    STA $c000 ;Store the value in the accumulator at memory location $c000
+### Absoluto: `$c000` ###
 
-### Zero page: `$c0` ###
+Com endereçamento absoluto você precisa usar o endereço completo (2 bytes) como argumento para a instrução. Por exemplo:
 
-All instructions that support absolute addressing (with the exception of the jump
-instructions) also have the option to take a single-byte address. This type of
-addressing is called "zero page" - only the first page (the first 256 bytes) of
-memory is accessible. This is faster, as only one byte needs to be looked up,
-and takes up less space in the assembled code as well.
+    STA $c000 ;Guarda o valor do acumulador no endereço $c000
 
-### Zero page,X: `$c0,X` ###
+### Página Zero: `$c0` ###
 
-This is where addressing gets interesting. In this mode, a zero page address is given, and then the value of the `X` register is added. Here is an example:
+Antes preciso explicar o que são páginas. Cada 256 bytes de memória é chamado de uma página. Como cada endereço usa 2 bytes, o primeiro dele (também chamado de **mais significativo**) representa a página, enquanto o segundo (também chamado de **menos significativo**) representa um endereço nesta página. A página que começa em `$0000` e vai até `$00ff` é portanto a *Página Zero*, pois seu primeiro byte é `$00`. 
 
-    LDX #$01   ;X is $01
-    LDA #$aa   ;A is $aa
-    STA $a0,X ;Store the value of A at memory location $a1
-    INX        ;Increment X
-    STA $a0,X ;Store the value of A at memory location $a2
+Quando você se referir a um endereço da página zero, não precisa usar o endereço completo. Basta identificar o segundo byte (o menos significativo). Por exemplo,
 
-If the result of the addition is larger than a single byte, the address wraps around. For example:
+    STA $c0 ;Guarda o valor do acumulador no endereço $c0
+
+Pode parecer apenas uma economia na digitação, mas não. O 6502 está realizando um numero menor de operações internas para chegar neste endereço. Acessar a página zero pode chegar a ser 25% mais rápido do que as outras páginas da memória. Além disso, são menos bytes necessários na sua ROM.
+
+Todas as instruções que suportam endereçamento absoluto, com excessão da instrução de pulo JMP, aceitam também o endereçamento da Página Zero.
+
+### Página Zero,X: `$c0,X` ###
+
+Aqui a coisa começa a ficar mais interessante. Neste modo, o valor do registro `X` é somado ao endereço da página zero. Veja um exemplo:
+
+    LDX #$01   ; X é $01
+    LDA #$aa   ; A é $aa
+    STA $a0,X  ; Guarde o valor de A no endereço de memória $a1
+    INX        ; Incremente X
+    STA $a0,X  ; Guarde o valor de A no endereço de memória $a2
+
+Cuidado! Este modo está focado na página zero. Se o resultado da soma for maior que um byte, o endereço dá a volta na página! Por exemplo:
 
     LDX #$05
-    STA $ff,X ;Store the value of A at memory location $04
+    STA $ff,X ; Guarda o valor de A no endereço $04
 
-### Zero page,Y: `$c0,Y` ###
+### Página Zero,Y: `$c0,Y` ###
 
-This is the equivalent of zero page,X, but can only be used with `LDX` and `STX`.
+Faz tudo que **Página Zero,X** faz, mas ele pode ser usado como parâmetro para `LDX` e `STX`. Em outras palavras, o registro `Y` pode ser usado para dar valores a `X`, mas não o contrário.
 
-### Absolute,X and absolute,Y: `$c000,X` and `$c000,Y` ###
+### Absoluto,X e Absoluto,Y: `$c000,X` and `$c000,Y` ###
 
-These are the absolute addressing versions of zero page,X and zero page,Y. For example:
+São as versões absolutas do que vimos até agora. Porém com três diferenças: 1) você precisa passar o endereço completo (2 bytes); 2) você pode cruzar de uma página para outra; 3) Você não pode usar este modo com `LDX` e `STX` (mas pode usar com `LDA` e `STA`). Por exemplo:
 
     LDX #$01
-    STA $0200,X ;Store the value of A at memory location $0201
+    STA $0200,X ; Guarda o valor de A no endereço $0201
 
-Unlike zero page,Y, absolute,Y can't be used with `STX` but can be used with `LDA` and `STA`.
+Toda vez que um endereçamento absoluto com `X` ou `Y` cruzar uma página, o 6502 levará mais tempo para chegar naquele endereço. Por exemplo:
 
-### Immediate: `#$c0` ###
+    LDX #$01
+    STA $01fe,X ; Guarda o valor de A no endereço $01ff
+    STA $01ff,X ; Guarda o valor de A no endereço $0200
 
-Immediate addressing doesn't strictly deal with memory addresses - this is the
-mode where actual values are used. For example, `LDX #$01` loads the value
-`$01` into the `X` register. This is very different to the zero page
-instruction `LDX $01` which loads the value at memory location `$01` into the
-`X` register.
+O segundo caso é 20% mais lento do que a primeiro pois você disse que sua referência era a página `$01` mas o endereço final estava na página `$02`.
 
-### Relative: `$c0` (or label) ###
+### Relativo: `$c0` (or label) ###
 
-Relative addressing is used for branching instructions. These instructions take
-a single byte, which is used as an offset from the following instruction.
+Endereçamento relativo é usado nas instruções de ramificação. Estas instruções aceitam apenas um único byte que representa o quanto o programa vai se deslocar (lembra? não faz nem 10 minutos!).
 
-Assemble the following code, then click the **Hexdump** button to see the assembled code.
+Monte o código abaixo e acione o **Hexdump** para ver o resultado em binário.
 
 {% include start.html %}
   LDA #$01
   CMP #$02
-  BNE notequal
+  BNE naoIgual
   STA $22
-notequal:
+naoIgual:
   BRK
 {% include end.html %}
 
-The hex should look something like this:
+O código em hex deve sair assim:
 
     a9 01 c9 02 d0 02 85 22 00
 
-`a9` and `c9` are the processor opcodes for immediate-addressed `LDA` and `CMP`
-respectively. `01` and `02` are the arguments to these instructions. `d0` is
-the opcode for `BNE`, and its argument is `02`. This means "skip over the next
-two bytes" (`85 22`, the assembled version of `STA $22`). Try editing the code
-so `STA` takes a two-byte absolute address rather than a single-byte zero page
-address (e.g. change `STA $22` to `STA $2222`). Reassemble the code and look at
-the hexdump again - the argument to `BNE` should now be `03`, because the
-instruction the processor is skipping past is now three bytes long.
+`a9` e `c9` são, respectivamente, os código para as instruções `LDA` e `CMP` no modo de endereçamento imediato.
+`01` e `02` são os argumentos dessas instruções. 
+`d0` é o código para `BNE`, e seu argumento é `02`. 
+Isso significa "pule 2 bytes para frente" (`85 22` é o código para `STA $22`). 
+Tente editar o código para que `STA` leve um endereço absoluto de 2 bytes ao invés de 1 byte (é só trocar o endereço de `$22` para qualquer outro fora da página zero, como `$2222`).
 
-### Implicit ###
+Monte o código e olha o hexd novamente: o argumento de `BNE` deve ser `03` agora, pois o pulo tem que ser de 3 bytes para chegar no mesmo lugar de antes.
+
+### Implicito ###
 
 Some instructions don't deal with memory locations (e.g. `INX` - increment the
 `X` register). These are said to have implicit addressing - the argument is
