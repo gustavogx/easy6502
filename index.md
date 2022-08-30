@@ -4,6 +4,7 @@ layout: default
 
 <h2 id="intro">Introdução</h2>
 
+
 Neste curso introdutório eu vou ensinar os primeiros passos para escrever em linguagem assembly 6502. Tudo o que você vê aqui existe graças ao [Nick Morgam](http://skilldrick.co.uk). Dentro da licença deste material, eu traduzi e adaptei o [original](https://github.com/skilldrick/easy6502) para o contexto deste curso.
 
 O processador 6502 foi um gigante dos anos 70 e 80, presente em máquinas como:
@@ -15,16 +16,16 @@ O processador 6502 foi um gigante dos anos 70 e 80, presente em máquinas como:
 System](http://en.wikipedia.org/wiki/Nintendo_Entertainment_System). 
 
 O Bender do Futurama [tem um 6502 como cérebro](http://www.transbyte.org/SID/SID-files/Bender_6502.jpg).
+![](http://www.transbyte.org/SID/SID-files/Bender_6502.jpg)
 
 Até o Exterminador do Futuro [foi programado em 6502](http://www.pagetable.com/docs/terminator/00-37-23.jpg).
-
 
 Então, mesmo assim por que você iria querer aprender 6502?
 
 Com a ascensão do fenômeno retro-gaming, fazer novos jogos para máquinas antigas está em moda. 
 Mesmo com as ferramentas mais modernas, o conhecimento da linguagem fundamental da máquina é essencial para extrair todo o suco que esses chips de 40 anos têm a oferecer. (em 2025 o 6502 faz 50 anos!) 
 
-Além disso, o 6502 ainda é fabricado [Western Design Center](http://www.westerndesigncenter.com/wdc/w65c02s-chip.cfm) e pode ser comprado em praticamente qualquer lugar, o que é muito conveniente.
+Além disso, o 6502 ainda é fabricado pela [Western Design Center](http://www.westerndesigncenter.com/wdc/w65c02s-chip.cfm) e pela [United Microelectronics Corporation](https://www.umc.com/) e pode ser comprado em praticamente qualquer lugar, o que é muito conveniente.
 
 Nas próximas horas veremos as instruções básicas do 6502 em uma plataforma fictícia, na forma de um simulador desenvolvido por [Stian Søreng](http://www.6502asm.com). Nele você pode simular quase toda a lógica do 6502 (exceto interrupções) e produzir gráficos numa tela de 32x32 pixels com 16 cores (a mesma paleta do Comodore 64). Isto possibilita aprender a lidar com a CPU sem ter que preocupar com chips periféricos, como *PPU*s, *APU*s e *mappers*, por exemplo. Se depois de terminar esta aula você estiver se sentindo aventureiro, [acesse o simulador](http://www.6502asm.com/index.html) ou quem sabe a [versão beta](http://www.6502asm.com/beta/index.html), ambos com diversos exemplos para explorar.
 
