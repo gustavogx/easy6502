@@ -187,16 +187,10 @@ Existem três instruções de comparação: `CMP`, `CPX` e `CPY`. Para saber se 
 
 <h2 id='addressing'>Modos de Endereçamento</h2>
 
-The 6502 uses a 16-bit address bus, meaning that there are 65536 bytes of
-memory available to the processor. Remember that a byte is represented by two
-hex characters, so the memory locations are generally represented as `$0000 -
-$ffff`. There are various ways to refer to these memory locations, as detailed below.
-
-With all these examples you might find it helpful to use the memory monitor to
-watch the memory change. The monitor takes a starting memory location and a
-number of bytes to display from that location. Both of these are hex values.
-For example, to display 16 bytes of memory from `$c000`, enter `c000` and `10`
-into **Start** and **Length**, respectively.
+O 6502 usa um barramento com endereços de 16-bit, o que significa que o processador tem acesso a 65536 endereços de memória diferentes. 
+Lembre-se que um byte é representado por dois caracteres em hex, então um endereço de memória de 16-bits (ou 2 bytes) são representados por quatro caracteres. Assim, os endereços de memória são representados na faixa `$0000 -
+$ffff`. Você já foi apresentado aos endereços que representam a memória de vídeo do nosso simulador (`$0200 - $05ff`) e o nosso programa que sempre começa em `$0600`.  
+Existem várias formas de se referir a estes endereços. Quanto mais você dominar estas formas de endereçamento, mais eficiente será seu código. Durante os exemplos a seguir, usem o monitor de memória para acompanhar como cada endereço é afetado. Configure o monitor para apontar para a faixa de endereços que você está estudando, ou não conseguirá ver os efeitos das instruções. Por exemplo, para mostrar os primeiros 16 bytes que começam em `$c000`, entre `c000` no **Start** e `10` no **Length**, respectivamente.
 
 ### Absolute: `$c000` ###
 
@@ -353,7 +347,7 @@ In this case, `($01)` looks up the two bytes at `$01` and `$02`: `$03` and
 `$07`. These form the address `$0703`. The value of the `Y` register is added
 to this address to give the final address `$0704`.
 
-### Exercise ###
+### Exercícios ###
 
 1. Try to write code snippets that use each of the 6502 addressing modes.
    Remember, you can use the monitor to watch a section of memory.
