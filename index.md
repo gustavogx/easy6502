@@ -16,7 +16,6 @@ O processador 6502 foi um gigante dos anos 70 e 80, presente em máquinas como:
 System](http://en.wikipedia.org/wiki/Nintendo_Entertainment_System). 
 
 O Bender do Futurama [tem um 6502 como cérebro](http://www.transbyte.org/SID/SID-files/Bender_6502.jpg).
-![](http://www.transbyte.org/SID/SID-files/Bender_6502.jpg)
 
 Até o Exterminador do Futuro [foi programado em 6502](http://www.pagetable.com/docs/terminator/00-37-23.jpg).
 
@@ -122,9 +121,9 @@ No simulador abaixo **digite** (não copie e cole) as seguintes instruções:
 
 {% include widget.html %}
 
-An important thing to notice here is the distinction between `ADC #$01` and
-`ADC $01`. The first one adds the value `$01` to the `A` register, but the
-second adds the value stored at memory location `$01` to the `A` register.
+Note que há uma diferença importante entre `ADC #$01` e `ADC $01`. 
+O primeiro soma o número `$01` no registro `A` enquanto o segundo soma 
+o número que mora no endereço de memória `$01` ao registro `A`. A diferença toda está no `#` que indica **constante**.
 
 Assemble, check the **Monitor** checkbox, then step through these three
 instructions. The monitor shows a section of memory, and can be helpful to
