@@ -145,22 +145,22 @@ o [obelisk](http://www.obelisk.me.uk/6502/reference.html). Elas são em inglês 
 3. O oposto de `ADC` é `SBC` (subtraia com *carry*). Escreva um programa que use esta instrução.
 
 
-<h2 id='branching'>Branching</h2>
+<h2 id='branching'>Remificações</h2>
 
-So far we're only able to write basic programs without any branching logic.
-Let's change that.
+Até aqui nós conseguimos escrever programas simples sem recorrer à logica de ramificação.
+Vamos mudar isso.
 
-6502 assembly language has a bunch of branching instructions, all of which
-branch based on whether certain flags are set or not. In this example we'll be
-looking at `BNE`: "Branch on not equal".
+Ramificação é uma decisão a partir da qual o programa segue um caminho ou outro.
+O assembly 6502 tem um monte de instruções dedicadas à ramificação e todas tomam decisões com base
+nas flags do processador. No primeiro exemplo vamos conhecer a instrução `BNE`: *Branch on not equal*.
 
 {% include start.html %}
   LDX #$08
-decrement:
+decremento:
   DEX
   STX $0200
   CPX #$03
-  BNE decrement
+  BNE decremento
   STX $0201
   BRK
 {% include end.html %}
