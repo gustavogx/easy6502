@@ -80,6 +80,7 @@ Então, a instrução `STA $0200` guarda o valor que estava temporariamente no r
 
 3. Adicione mais instruções para desenhar mais pixels.
 
+
 <h2 id='registers'>Registros e flags</h2>
 
 Nós já vimos um pouco do que há por dentro do processador, aquela parte sobre 
@@ -137,7 +138,7 @@ Além disso, uma outra flag é acionada, a flag **zero**. Esta flag é acionada 
 Os melhores sites para saber o que cada uma das 56 instruções do 6502 fazem são o [6502.org](http://www.6502.org/tutorials/6502opcodes.html) e
 o [obelisk](http://www.obelisk.me.uk/6502/reference.html). Elas são em inglês mas você pode jogar as explicações no Google Tradutor. Eu não recomendo jogar o site todo pois o Tradutor tem uma tendência a traduzir os nomes das instruções, o que pode ser confuso. De qualquer forma não há sites mais completos do que estes. Eles serão seus mapas nesta jornada.
 
-### Exercises ###
+### Exercícios ###
 
 1. Você já viu o `TAX`. Você provavelmente consegue advinhar o que o `TAY`, `TXA` e `TYA` fazem,
    então use o simulador para escrever algum código que confirme suas suposições.
@@ -165,34 +166,26 @@ decremento:
   BRK
 {% include end.html %}
 
-First we load the value `$08` into the `X` register. The next line is a label.
-Labels just mark certain points in a program so we can return to them later.
-After the label we decrement `X`, store it to `$0200` (the top-left pixel), and
-then compare it to the value `$03`.
-[`CPX`](http://www.obelisk.me.uk/6502/reference.html#CPX) compares the
-value in the `X` register with another value. If the two values are equal, the
-`Z` flag is set to `1`, otherwise it is set to `0`.
+Em primeiro lugar nós carregamos o valor `$80` no registro `X`. Na linha seguinte criamos um rótulo (em inglês, *label*). 
+Um rótulo é uma marcação feita num ponto do programa onde podemos querer voltar depois.
+Depois do rótulo nós decrementamos `X` e o armazenamos no endereço `$0200` (o píxel do canto superior esquerdo, lembra?) e, por fim, comparamos com o valor `$03`.
+[`CPX`](http://www.obelisk.me.uk/6502/reference.html#CPX) compara o valor de `X` com outro. Se os dois forem iguais, a flag `Z` é acionada, senão ela é desligada.
 
-The next line, `BNE decrement`, will shift execution to the decrement label if
-the `Z` flag is set to `0` (meaning that the two values in the `CPX` comparison
-were not equal), otherwise it does nothing and we store `X` to `$0201`, then
-finish the program.
+Na linha seguinte, a instrução `BNE decremento`, vai mudar a execussão do programa para o rótulo *decremento* se a flag `Z` estiver desligada `0`, o que significia que os dois valores comparados por `CPX` não são iguais. Caso contrário, a ramificação não acontece e nós guardamos `X` em `$0201`, terminando o programa.
 
-In assembly language, you'll usually use labels with branch instructions. When
-assembled though, this label is converted to a single-byte relative offset (a
-number of bytes to go backwards or forwards from the next instruction) so
-branch instructions can only go forward and back around 256 bytes. This means
-they can only be used to move around local code. For moving further you'll need
-to use the jumping instructions.
-
-### Exercises ###
-
-1. The opposite of `BNE` is `BEQ`. Try writing a program that uses `BEQ`.
-2. `BCC` and `BCS` ("branch on carry clear" and "branch on carry set") are used
-   to branch on the carry flag. Write a program that uses one of these two.
+Na linguagem assembly nós usamos os rótulos, em geral, para ramificações. Mas quando o código é convertido em binário estes rótulos são convertidos em 1 byte que indica o quanto deve ser somado ou subtraido do `PC`, que indica qual instrução está sendo executada. Por causa desta limitação de 1 byte, as ramificações só podem ocorrer até no máximo 256 bytes para frente ou para trás. Para se mover para pontos mais distantes do programa, você vai precisar das instuções de "pulo".
 
 
-<h2 id='addressing'>Addressing modes</h2>
+### Para refletir ###
+Existem três instruções de comparação: `CMP`, `CPX` e `CPY`. Para saber se dois valores são iguais o 6502 faz uma subtração. Por exemplo, `CPM #$03` faz `A` menos `$03`. Se `A` for igual ao número `$03`, esta subtração dará zero e a flag `Z` é acionada. Mas e quando não forem iguais? Quais flags você acha que são acionadas?
+
+### Exercícios ###
+
+1. O oposto do `BNE` é `BEQ`. Tente escrever um programa que use `BEQ`.
+2. `BCC` e `BCS` (*branch on carry clear* e *branch on carry set*) são usados para ramificar com base na flag `C`. Escreva um programa que use estas duas instruções.
+3. `BPL` e `BMI` (*branch on plus* e *branch on minus*) são usadas para ramificar com base na flag `N`. Escreva um programa que use estas duas instruções.
+
+<h2 id='addressing'>Modos de Endereçamento</h2>
 
 The 6502 uses a 16-bit address bus, meaning that there are 65536 bytes of
 memory available to the processor. Remember that a byte is represented by two
