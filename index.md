@@ -275,14 +275,28 @@ Tente editar o código para que `STA` leve um endereço absoluto de 2 bytes ao i
 
 Monte o código e olha o hexd novamente: o argumento de `BNE` deve ser `03` agora, pois o pulo tem que ser de 3 bytes para chegar no mesmo lugar de antes.
 
-### Implicito ###
+### Implícito ###
 
-Some instructions don't deal with memory locations (e.g. `INX` - increment the
-`X` register). These are said to have implicit addressing - the argument is
-implied by the instruction.
+Algumas instruções modificam os registros ou controlam o fluxo do programa, mas nunca modificam a memória. 
+Por exemplo, `INX` incrementa o registro `X`. Dizemos que estas tem o endereço implícito, ou seja, já é conhecido internamente pelo 6502.
 
-### Indirect: `($c000)` ###
+Outros exemplos são:
 
+    INC ; Incrementa A (assim como INX e INY)
+    DEC ; Decrementa A (assim como DEX e DEY)
+
+    TAX ; Transfere A para X (assim como TAY)
+    TXA ; Transfere X para A (assim como TYA)
+    
+    CLC ; Limpa o carry C
+    SEC ; Aciona o carry C
+    
+e muitos outros.
+
+### Indireto: `($c000)` ###
+
+Endereçamento indireto usa um enreço absoluto para procurar por outro endereço. 
+A utilidade é simples: imagine que você guardou o valor de um endereço de memória na própria memória. Por exemplo, os itens na tela do seu jogo moram em locais diferentes da ROM, mas você carregou alguns deles para esta fase. 
 Indirect addressing uses an absolute address to look up another address. The
 first address gives the least significant byte of the address, and the
 following byte gives the most significant byte. That can be hard to wrap your
