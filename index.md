@@ -15,9 +15,12 @@ O processador 6502 foi um gigante dos anos 70 e 80, presente em máquinas como:
 [Apple II](http://en.wikipedia.org/wiki/Apple_II), e o [Nintendo Entertainment
 System](http://en.wikipedia.org/wiki/Nintendo_Entertainment_System). 
 
-O Bender do Futurama [tem um 6502 como cérebro](http://www.transbyte.org/SID/SID-files/Bender_6502.jpg).
+O Bender do Futurama tem um 6502 como cérebro.
+![](http://www.transbyte.org/SID/SID-files/Bender_6502.jpg).
 
-Até o Exterminador do Futuro [foi programado em 6502](http://www.pagetable.com/docs/terminator/00-37-23.jpg).
+E também o Exterminador do Futuro 
+![](http://www.pagetable.com/docs/terminator/00-37-23.jpg).
+(esperando a Skynet surgir para eu ter meu 6502 em metal liquido!)
 
 Então, mesmo assim por que você iria querer aprender 6502?
 
@@ -121,34 +124,25 @@ No simulador abaixo **digite** (não copie e cole) as seguintes instruções:
 
 {% include widget.html %}
 
-Note que há uma diferença importante entre `ADC #$01` e `ADC $01`. 
+Note que há uma diferença importante entre o `ADC #$01` que vimos antes e o `ADC $01` que usamos acima. 
 O primeiro soma o número `$01` no registro `A` enquanto o segundo soma 
 o número que mora no endereço de memória `$01` ao registro `A`. A diferença toda está no `#` que indica **constante**.
 
-Assemble, check the **Monitor** checkbox, then step through these three
-instructions. The monitor shows a section of memory, and can be helpful to
-visualise the execution of programs. `STA $01` stores the value of the `A`
-register at memory location `$01`, and `ADC $01` adds the value stored at the
-memory location `$01` to the `A` register. `$80 + $80` should equal `$100`, but
-because this is bigger than a byte, the `A` register is set to `$00` and the
-carry flag is set. As well as this though, the zero flag is set. The zero flag
-is set by all instructions where the result is zero.
+Monte seu código e acione o **Monitor**, caminhe passo a passo por estas três instruções. Aqui, **monitor** seguinifica monitoramento e não a tela do computador. Ele mostra uma faixa da memória (você pode configurar para ver qualquer faixa) e é muito útil para visualizar a execussão dos programas.
+`STA $01` quarda o valor de `A` no endereço de memória `$01` (em inglês, *STore A*) e `ADC $01` 
+soma o valor armazenado no endereço de memória `$01` ao registro `A`.
+`$80 + $80` deveria ser igual à `$100`, mas como isso é maior do que 1 byte, o registro `A` recebe `$00` e a flag carry é acionada.
+Além disso, uma outra flag é acionada, a flag **zero**. Esta flag é acionada por todas as instruções cujo resultado é `$00`, e ela é muito útil.
 
-A full list of the 6502 instruction set is [available
-here](http://www.6502.org/tutorials/6502opcodes.html) and
-[here](http://www.obelisk.me.uk/6502/reference.html) (I usually refer to
-both pages as they have their strengths and weaknesses). These pages detail the
-arguments to each instruction, which registers they use, and which flags they
-set. They are your bible.
+Os melhores sites para saber o que cada uma das 56 instruções do 6502 fazem são o [6502.org](http://www.6502.org/tutorials/6502opcodes.html) e
+o [obelisk](http://www.obelisk.me.uk/6502/reference.html). Elas são em inglês mas você pode jogar as explicações no Google Tradutor. Eu não recomendo jogar o site todo pois o Tradutor tem uma tendência a traduzir os nomes das instruções, o que pode ser confuso. De qualquer forma não há sites mais completos do que estes. Eles serão seus mapas nesta jornada.
 
 ### Exercises ###
 
-1. You've seen `TAX`. You can probably guess what `TAY`, `TXA` and `TYA` do,
-   but write some code to test your assumptions.
-2. Rewrite the first example in this section to use the `Y` register instead of
-   the `X` register.
-3. The opposite of `ADC` is `SBC` (subtract with carry). Write a program that
-   uses this instruction.
+1. Você já viu o `TAX`. Você provavelmente consegue advinhar o que o `TAY`, `TXA` e `TYA` fazem,
+   então use o simulador para escrever algum código que confirme suas suposições.
+2. Reescreva o primeiro exemplo dessa seção usando o registro `Y` ao invés do `X`.
+3. O oposto de `ADC` é `SBC` (subtraia com *carry*). Escreva um programa que use esta instrução.
 
 
 <h2 id='branching'>Branching</h2>
