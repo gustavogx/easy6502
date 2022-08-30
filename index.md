@@ -296,32 +296,40 @@ e muitos outros.
 ### Indireto: `($c000)` ###
 
 Endereçamento indireto usa um enreço absoluto para procurar por outro endereço. 
-A utilidade é simples: imagine que você guardou o valor de um endereço de memória na própria memória. Por exemplo, os itens na tela do seu jogo moram em locais diferentes da ROM, mas você carregou alguns deles para esta fase. 
-Indirect addressing uses an absolute address to look up another address. The
-first address gives the least significant byte of the address, and the
-following byte gives the most significant byte. That can be hard to wrap your
-head around, so here's an example:
+É muito comum em jogos que você tenha que guarda o valor de um endereço dentro da própria memória (o endereço do endereço). Em linguagens de programação modernas o nome disso é *ponteiro*. Porém para entender como guardamos um endereço na memória, precisamos falar de **índio pequeno e índio grande**.
+
+Não, não vamos falar de povos nativos. É que em inglês a palavra para terminação *endian* parece com a palavra *indian*. O que eu quero explicar aqui é o conceito de **terminação grande** e **terminação pequena**. Em inglês chama *big-endian* e *little-endian*, como na música... *one, two, three little-endians* (o que, não era assim?).
+
+Falando sério, uma CPU é *big-endian* quando ela lê ou guarda endereços na memória na mesma ordem que nós humanos lemos e escrevemos:
+
+    $cc01 é armazenado como $cc $01, nesta ordem.
+    
+Já uma CPU é chamada de *little-endian* quando o byte menos significativo é escrito primeiro:
+
+    $cc01 é armazenado como $01 $cc, nesta ordem.
+
+O 6502 é **little-endian**.
+
+Vejamos um examplo:
 
 {% include start.html %}
 LDA #$01
 STA $f0
 LDA #$cc
 STA $f1
-JMP ($00f0) ;dereferences to $cc01
+JMP ($00f0) ; pula para $cc01
 {% include end.html %}
 
-In this example, `$f0` contains the value `$01` and `$f1` contains the value
-`$cc`. The instruction `JMP ($f0)` causes the processor to look up the two
-bytes at `$f0` and `$f1` (`$01` and `$cc`) and put them together to form the
-address `$cc01`, which becomes the new program counter. Assemble and step
-through the program above to see what happens. I'll talk more about `JMP` in
-the section on [Jumping](#jumping).
+Neste exemplo, `$f0` contém o valor `$01` e `$f1` contém o valor
+`$cc`. A instrução `JMP ($00f0)` faz o processador mudar a execussão para o endereço armazenado em `$00f0` (não o própio endereço `$00f0`, mas o que está guardado lá). O 6502 vai ler 2 bytes, pois este é o tamanho de um endereço de memória. O primeiro em `$00f0`, neste caso vale `$01`, e o segundo em `$00f1`, neste caso `$cc`.
+Como o 6502 é *little-endian*, ele vai entender que esta instrução é equivalente a `JMP $cc01`.
+Nós vamos falar mais sobre as instruções de pulo na seção [Pulando](#jumping).
 
-### Indexed indirect: `($c0,X)` ###
+### Indexado indireto: `($c0,X)` ###
 
-This one's kinda weird. It's like a cross between zero page,X and indirect.
-Basically, you take the zero page address, add the value of the `X` register to
-it, then use that to look up a two-byte address. For example:
+Este é meio estranho. É como uma mistura do Página Zero,X com o indireto.
+Basicamente, você pega o endereço da página zero e soma a ele o valor de `X`, usando isso para procurar pelo endereço de memória.
+Ou seja, `X` está afetando o local onde você procura pelo endereço armazenado. Por exemplo:
 
 {% include start.html %}
 LDX #$01
@@ -334,21 +342,13 @@ STY $0705
 LDA ($00,X)
 {% include end.html %}
 
-Memory locations `$01` and `$02` contain the values `$05` and `$07`
-respectively. Think of `($00,X)` as `($00 + X)`. In this case `X` is `$01`, so
-this simplifies to `($01)`. From here things proceed like standard indirect
-addressing - the two bytes at `$01` and `$02` (`$05` and `$07`) are looked up
-to form the address `$0705`.  This is the address that the `Y` register was
-stored into in the previous instruction, so the `A` register gets the same
-value as `Y`, albeit through a much more circuitous route. You won't see this
-much.
+Os endereços de memória `$01` e `$02` contém os valores `$05` e `$07`, respectivamente.
+Pense em `($00,X)` como `($00 + X)`. Neste caso `X` é `$01`, então o resultado final é `($01)`. A partir daqui é como o endereçamento indireto visto anteriormente. `$01` e `$02` (`$05` e `$07`) são obtidos para formar o endereço `$0705`. 
 
 
-### Indirect indexed: `($c0),Y` ###
+### Indireto Indexado: `($c0),Y` ###
 
-Indirect indexed is like indexed indirect but less insane. Instead of adding
-the `X` register to the address *before* dereferencing, the zero page address
-is dereferenced, and the `Y` register is added to the resulting address.
+Este é como o anterior, porém menos insado. Ao invés de somar `Y` no valor do endereço onde você está olhando, ele soma no endereço encontrado. 
 
 {% include start.html %}
 LDY #$01
@@ -361,15 +361,13 @@ STX $0704
 LDA ($01),Y
 {% include end.html %}
 
-In this case, `($01)` looks up the two bytes at `$01` and `$02`: `$03` and
-`$07`. These form the address `$0703`. The value of the `Y` register is added
-to this address to give the final address `$0704`.
+Neste caso, `($01)` é o início da sequência de dois bytes, `$03` e
+`$07`. Estes endereços formam `$0703`. O valor de `Y` é somado neste endereço e o resultado final é `$0704`.
 
 ### Exercícios ###
 
-1. Try to write code snippets that use each of the 6502 addressing modes.
-   Remember, you can use the monitor to watch a section of memory.
-
+1. Tente escrever códigos curtos para testar cada um dos tipos de endereçamento. 
+   Lembre-se, você pode usar o monitor de memória!
 
 <h2 id='stack'>The stack</h2>
 
