@@ -367,37 +367,47 @@ Neste caso, `($01)` é o início da sequência de dois bytes, `$03` e
 ### Exercícios ###
 
 1. Tente escrever códigos curtos para testar cada um dos tipos de endereçamento. 
-   Lembre-se, você pode usar o monitor de memória!
+   Lembre-se, você pode usar o monitor de memória.
 
 <h2 id='stack'>The stack</h2>
 
-The stack in a 6502 processor is just like any other stack - values are pushed
-onto it and popped ("pulled" in 6502 parlance) off it. The current depth of the
-stack is measured by the stack pointer, a special register. The stack lives in
-memory between `$0100` and `$01ff`. The stack pointer is initially `$ff`, which
-points to memory location `$01ff`. When a byte is pushed onto the stack, the
-stack pointer becomes `$fe`, or memory location `$01fe`, and so on.
+Stack é o nome em inglês dado para quando empilhamos coisas de forma ordenada. 
+Em computação, stack é uma das formas de se organizar valores na memória do computador. 
+Imagine uma pilha de pratos de cozinha, um em cima do outro. Você pode colocar 
+mais pratos sobre a pilha e remover pratos de cima da pilha, mas não pode tocar
+nos pratos que estão no meio, a não ser que remova um a um os que estão
+acima deles.
 
-Two of the stack instructions are `PHA` and `PLA`, "push accumulator" and "pull
-accumulator". Below is an example of these two in action.
+No 6502, o stack mora entre os endereço de memória `$0100` e `$01ff`. O primeiro 
+endereço livre (o topo da pilha) fica armazenado no registro chamado Ponteiro de 
+Pilha (Stack Pointer, ou `SP`), que sempre começa com o valor `$ff`, que aponta para 
+o endereço `$01ff`. Quando um byte é colocado sobre a pilha (pushed) o ponteiro `SP` passa
+a valer `$fe`, apontando para o próximo endereço em ordem regressiva, `$01fe`, e assim
+por diante. No total, cabem 256 bytes na stack.
+
+As duas instruções que lidam com a pilha são `PHA` e `PLA`, "push accumulator" e "pull
+accumulator". Elas inserem o valor de `A` no topo da pilha, e removem o valor do topo
+da pilha para `A`, respectivamente.
+
+Veja os examplos abaixo das duas instruções em ação:
 
 {% include start.html %}
   LDX #$00
   LDY #$00
-firstloop:
+primeiroloop:
   TXA
   STA $0200,Y
   PHA
   INX
   INY
   CPY #$10
-  BNE firstloop ;loop until Y is $10
-secondloop:
+  BNE primeiroloop ;repita ate que Y seja $10
+segundoloop:
   PLA
   STA $0200,Y
   INY
-  CPY #$20      ;loop until Y is $20
-  BNE secondloop
+  CPY #$20      ;repita ate que Y seja $20
+  BNE segundoloop
 {% include end.html %}
 
 `X` holds the pixel colour, and `Y` holds the position of the current pixel.
