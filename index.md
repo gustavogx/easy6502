@@ -526,9 +526,7 @@ no_eor:
 ### Exercícios ###
 
 12. Modifique a semente (inicialmente `$20`, ou 32 em decimal, no exemplo) e veja outra sequência sendo gerada. A sequência é unica para cada semente.
-13. Modifique o programa para executar mais 256 após o final da sequência original, sem guardar nenhum valor, para então escrever os pŕoximos 16 valores
-na página de memória seguinte (página `$20`). Repare que a sequência é a mesma que a original, pois o período deste gerador é de exatamente 256 iterações.
-
+13. Modifique o programa acima para executar mais 256 vezes após o final da sequência original, sem guardar nenhum valor, para então escrever os próximos 16 valores na página de memória seguinte (página $20). Repare que a sequência é a mesma que a original, pois o período deste gerador é de exatamente 256 iterações.
 
 
 ------------------------------------------------------------
