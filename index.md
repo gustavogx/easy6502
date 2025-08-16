@@ -495,38 +495,47 @@ LDX #$0A            ; Carrega 10 em X
 JSR MULTIPLIQUE     ; Call multiply function
 BRK
 
-; Resultado $40 em `A` e $01 em `X`, o que representa `$140` (320 em decimal).
+; Resultado $40 em `A` e $01 em `Y`, o que representa `$140` (320 em decimal).
 
 MULTIPLIQUE:
-    LDA #$00        
-    LDY #$00        
-    LDX #$08        
-    
-loop_multiplicacao:
-    LSR $01         
-    BCC pular_soma    
-    
-    CLC             
-    ADC $00         
-    BCC sem_vai_um    
-    INY             
-    
-sem_vai_um:
-pular_soma:
-    ASL $00         
-    BCC sem_extrapolar 
-
-    ; lide com o que aconrece quando a multiplicacao extrapola para o proximo byte
-    SEC             
-    TYA             
-    ADC #$00        
-    TAY             
-    
-sem_extrapolar:
-    DEX             
-    BNE loop_multiplicacao   
-    RTS             
+        STA $10         ; Guarda multiplicando na página zero
+        STX $11         ; Guarda multiplicador na página zero
+        
+        LDA #$00        ; Limpa acumulador (vai guardar byte baixo do resultado)
+        LDY #$00        ; Limpa Y (vai guardar byte alto do resultado)
+        LDX #$08        ; Define contador para 8 bits
+        
+MULT_LOOP:
+        LSR $11         ; Desloca multiplicador à direita, bit 0 vai para carry
+        BCC SKIP_ADD    ; Se carry = 0, pula adição
+        
+        CLC             ; Limpa carry para adição
+        ADC $10         ; Soma multiplicando ao byte baixo
+        BCC NO_CARRY    ; Se não houve carry, continua
+        INY             ; Incrementa byte alto se houve carry
+        
+NO_CARRY:
+SKIP_ADD:
+        ASL $10         ; Desloca multiplicando à esquerda (multiplica por 2)
+        BCC NO_OVERFLOW ; Se não houve carry, continua
+        
+        ; Trata overflow do multiplicando para o byte alto
+        PHP             ; Salva flags na pilha
+        TYA             ; Pega byte alto
+        ADC #$00        ; Soma carry ao byte alto
+        TAY             ; Guarda de volta em Y
+        PLP             ; Restaura flags
+        
+NO_OVERFLOW:
+        DEX             ; Decrementa contador de bits
+        BNE MULT_LOOP   ; Continua se ainda há bits para processar
+        
+        ; Resultado final está em A (byte baixo) e Y (byte alto)
+        RTS             ; Retorna para quem chamou
 {% include end.html %}
+
+### Para refletir ###
+O que é uma multiplicação, senão uma 
 
 ### Exercícios ###
 
