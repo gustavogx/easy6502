@@ -488,9 +488,6 @@ chamando assim o próximo bloco. Isso ilustra como `JSR` e `RTS` podem ser usado
 
 O exemplo final: **uma função**
 
-Em computadores modernos, funções usam o stack para passar parâmetros e retornar valores. Na época do 6502 isso era proibitivo pois o stack
-não é muito grande. Mesmo assim, o conceito funciona. Vamos criar uma função que multiplique 2 valores. 
-
 {% include start.html %}
 
 LDA #$20            ; Carrega 32 em A
@@ -535,7 +532,10 @@ sem_extrapolar:
 
 12. Edite o código acima adicionando comentários em cada linha (com o `;` ), explicando o que acontece na função acima.
 
-
+------------------------------------------------------------
+Daqui para frente, o tutorial está em inglês (por enquanto). 
+Vamos usar o que aprendemos para programa um joguinho, o famoso Snake, ou jogo 
+da cobrinha, como ficou conhecido aqui Brasil.
 
 <h2 id='snake'>Creating a game</h2>
 
