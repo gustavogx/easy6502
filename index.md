@@ -140,10 +140,10 @@ o [obelisk](http://www.obelisk.me.uk/6502/reference.html). Elas são em inglês 
 
 ### Exercícios ###
 
-1. Você já viu o `TAX`. Você provavelmente consegue advinhar o que o `TAY`, `TXA` e `TYA` fazem,
+4. Você já viu o `TAX`. Você provavelmente consegue advinhar o que o `TAY`, `TXA` e `TYA` fazem,
    então use o simulador para escrever algum código que confirme suas suposições.
-2. Reescreva o primeiro exemplo dessa seção usando o registro `Y` ao invés do `X`.
-3. O oposto de `ADC` é `SBC` (subtraia com *carry*). Escreva um programa que use esta instrução.
+5. Reescreva o primeiro exemplo dessa seção usando o registro `Y` ao invés do `X`.
+6. O oposto de `ADC` é `SBC` (subtraia com *carry*). Escreva um programa que use esta instrução.
 
 
 <h2 id='branching'>Remificações</h2>
@@ -181,9 +181,9 @@ Existem três instruções de comparação: `CMP`, `CPX` e `CPY`. Para saber se 
 
 ### Exercícios ###
 
-1. O oposto do `BNE` é `BEQ`. Tente escrever um programa que use `BEQ`.
-2. `BCC` e `BCS` (*branch on carry clear* e *branch on carry set*) são usados para ramificar com base na flag `C`. Escreva um programa que use estas duas instruções.
-3. `BPL` e `BMI` (*branch on plus* e *branch on minus*) são usadas para ramificar com base na flag `N`. Escreva um programa que use estas duas instruções.
+7. O oposto do `BNE` é `BEQ`. Tente escrever um programa que use `BEQ`.
+8. `BCC` e `BCS` (*branch on carry clear* e *branch on carry set*) são usados para ramificar com base na flag `C`. Escreva um programa que use estas duas instruções.
+9. `BPL` e `BMI` (*branch on plus* e *branch on minus*) são usadas para ramificar com base na flag `N`. Escreva um programa que use estas duas instruções.
 
 <h2 id='addressing'>Modos de Endereçamento</h2>
 
@@ -366,13 +366,15 @@ Neste caso, `($01)` é o início da sequência de dois bytes, `$03` e
 
 ### Exercícios ###
 
-1. Tente escrever códigos curtos para testar cada um dos tipos de endereçamento. 
+10. Tente escrever códigos curtos para testar cada um dos tipos de endereçamento. 
    Lembre-se, você pode usar o monitor de memória.
 
-<h2 id='stack'>The stack</h2>
+<h2 id='stack'>O stack</h2>
 
-Stack é o nome em inglês dado para quando empilhamos coisas de forma ordenada. 
-Em computação, stack é uma das formas de se organizar valores na memória do computador. 
+Stack é o nome em inglês dado para quando empilhamos coisas de forma ordenada. Por isso
+também podemos chamar de "a pilha".
+
+Em computação, o stack (ou a pilha) é uma das formas de se organizar valores na memória do computador. 
 Imagine uma pilha de pratos de cozinha, um em cima do outro. Você pode colocar 
 mais pratos sobre a pilha e remover pratos de cima da pilha, mas não pode tocar
 nos pratos que estão no meio, a não ser que remova um a um os que estão
@@ -419,7 +421,7 @@ um padrão espelhado. A natureza do stack é recuperar os valores na ordem opost
 
 ### Exercícios ###
 
-1. Com das instruções `TAX`, `TAY` e suas recíprocas `TXA` e `TYA`, podemos usar o
+11. Com das instruções `TAX`, `TAY` e suas recíprocas `TXA` e `TYA`, podemos usar o
 o stack para preservar valores dos registros `X` e `Y` durante operações complexas, como em loops.
 Utilize o que aprendeu até agora para pintar um quadrado de 10x10 pixels na tela.
  
@@ -492,23 +494,13 @@ não é muito grande. Mesmo assim, o conceito funciona. Vamos criar uma função
 {% include start.html %}
 
 LDA #$20            ; Carrega 32 em A
-PHA                 ; Guarda na pilha
-LDA #$0A            ; Carrega 10 em X
-PHA                 ; Guarda na pilha
+LDX #$0A            ; Carrega 10 em X
 JSR MULTIPLIQUE     ; Call multiply function
-PLA
-TAX                 ; Veja que X vale $01
-PLA                 ; Veja que A vale $40
 BRK
 
-; Resultado $40 e $01, ou $140 (320 em decimal).
+; Resultado $40 em `A` e $01 em `X`, o que representa `$140` (320 em decimal).
 
 MULTIPLIQUE:
-    PLA
-    STA $00         
-    PLA
-    STA $01         
-    
     LDA #$00        
     LDY #$00        
     LDX #$08        
@@ -526,7 +518,8 @@ sem_vai_um:
 pular_soma:
     ASL $00         
     BCC sem_extrapolar 
-    ; Handle overflow of multiplicand into high byte
+
+    ; lide com o que aconrece quando a multiplicacao extrapola para o proximo byte
     SEC             
     TYA             
     ADC #$00        
@@ -535,11 +528,12 @@ pular_soma:
 sem_extrapolar:
     DEX             
     BNE loop_multiplicacao   
-    PHA
-    TYA
-    PHA
     RTS             
 {% include end.html %}
+
+### Exercícios ###
+
+12. Edite o código acima adicionando comentários em cada linha (com o `;` ), explicando o que acontece na função acima.
 
 
 
