@@ -68,9 +68,9 @@ Então, a instrução `STA $0200` guarda o valor que estava temporariamente no r
 
 ### Para refletir ###
 
-1. *Assemble* significa montar e *assembly* é um substantivo derivado, algo como uma montagem. Se você já ouviu falar em *compilar um programa*, então saiba que compilação e montagem não são parecidas em nada! As instruções que usamos dara dar ordens à CPU são escritar com letras como `LDA`e `STA` para ficar mais fácil para nós humanos, mas na real estas ordens são números. O programa inteiro é feito apenas por números! Se você clicar em **Hexdump** no simulador vai ver uma janelinha com uma sequência de número em hexa. Aquele é o programa. É isso que vai gravado em um cartucho. O programa escrito em palavras legíveis é chamado de *assembly* (por isso o nome assembly 6502), processo de trocar as palavras pelos números é chamado de *assembling*, e o programa que faz essa troca é chamado de *assembler*.   
+- *Assemble* significa montar e *assembly* é um substantivo derivado, algo como uma montagem. Se você já ouviu falar em *compilar um programa*, então saiba que compilação e montagem não são parecidas em nada! As instruções que usamos dara dar ordens à CPU são escritar com letras como `LDA`e `STA` para ficar mais fácil para nós humanos, mas na real estas ordens são números. O programa inteiro é feito apenas por números! Se você clicar em **Hexdump** no simulador vai ver uma janelinha com uma sequência de número em hexa. Aquele é o programa. É isso que vai gravado em um cartucho. O programa escrito em palavras legíveis é chamado de *assembly* (por isso o nome assembly 6502), processo de trocar as palavras pelos números é chamado de *assembling*, e o programa que faz essa troca é chamado de *assembler*.   
 
-2. Para uma tela de 256x256 pixels (próxima às resoluções mais comuns nos anos 80), quanto de memória seria necessário para manter este mesmo esquema de mapeamento de vídeo? Quando chegar na resposta, reflita sobre isso: o 6502 consegue endereçar somente 65536 valores diferentes (também conhecido como 64k).
+- Para uma tela de 256x256 pixels (próxima às resoluções mais comuns nos anos 80), quanto de memória seria necessário para manter este mesmo esquema de mapeamento de vídeo? Quando chegar na resposta, reflita sobre isso: o 6502 consegue endereçar somente 65536 valores diferentes (também conhecido como 64k).
 
 ### Exercícios ###
 
@@ -364,6 +364,9 @@ LDA ($01),Y
 Neste caso, `($01)` é o início da sequência de dois bytes, `$03` e
 `$07`. Estes endereços formam `$0703`. O valor de `Y` é somado neste endereço e o resultado final é `$0704`.
 
+### Para refletir ###
+Tantos modos de engereçamento têm suas aplicações. Pense em como alguns destes permitem tratar endereços de memória como variáveis ou como ponteiros: variáveis que guardam o endereço de outras variáveis.
+
 ### Exercícios ###
 
 10. Tente escrever códigos curtos para testar cada um dos tipos de endereçamento. 
@@ -486,60 +489,47 @@ fim:
 A ideia é simples: o programa tem três módulos que são chamados em sequência. Ao final de cada um, a execussão retorna para o ponto original, 
 chamando assim o próximo bloco. Isso ilustra como `JSR` e `RTS` podem ser usados juntos para criar códigos modulares.
 
-O exemplo final: **uma função**
+### Para refletir ###
+Em computadores modernos, o stack é utilizado para passar parâmetros e receber resultados de funções. Na prática, isso não é viável
+no 6502 pois o stack é muito limitado (lembre-se, tem apenas 256 bytes).
+
+Último exemplo: Gerador de número pseudo-aleatório
+
+Gerar número que parecem aleatórios é relevante é diversas aplicações, incluindo jogos. Abaixo temos ums dos algorítimos mais simples conhecidos. Execute o programa abaixo e 
+veja como a função `random` transforma valores no endereço `$01` em outro aleatório. O programa abaixo gera 16 valores em sequência. Use o **Monitor** para ver a memória e os 
+valores gerados.
 
 {% include start.html %}
+LDA #20 ; semente
+STA $01
 
-LDA #$20            ; Carrega 32 em A
-LDX #$0A            ; Carrega 10 em X
-JSR MULTIPLIQUE     ; Call multiply function
+LDX #$00
+loop:
+	JSR random
+	STA $10,X
+	INX
+	CPX #$10
+	BNE loop
 BRK
 
-; Resultado $40 em `A` e $01 em `Y`, o que representa `$140` (320 em decimal).
+random:
+	LDA	$01		
+	ASL			
+	BCC	no_eor	
 
-MULTIPLIQUE:
-        STA $10         ; Guarda multiplicando na página zero
-        STX $11         ; Guarda multiplicador na página zero
-        
-        LDA #$00        ; Limpa acumulador (vai guardar byte baixo do resultado)
-        LDY #$00        ; Limpa Y (vai guardar byte alto do resultado)
-        LDX #$08        ; Define contador para 8 bits
-        
-MULT_LOOP:
-        LSR $11         ; Desloca multiplicador à direita, bit 0 vai para carry
-        BCC SKIP_ADD    ; Se carry = 0, pula adição
-        
-        CLC             ; Limpa carry para adição
-        ADC $10         ; Soma multiplicando ao byte baixo
-        BCC NO_CARRY    ; Se não houve carry, continua
-        INY             ; Incrementa byte alto se houve carry
-        
-NO_CARRY:
-SKIP_ADD:
-        ASL $10         ; Desloca multiplicando à esquerda (multiplica por 2)
-        BCC NO_OVERFLOW ; Se não houve carry, continua
-        
-        ; Trata overflow do multiplicando para o byte alto
-        PHP             ; Salva flags na pilha
-        TYA             ; Pega byte alto
-        ADC #$00        ; Soma carry ao byte alto
-        TAY             ; Guarda de volta em Y
-        PLP             ; Restaura flags
-        
-NO_OVERFLOW:
-        DEX             ; Decrementa contador de bits
-        BNE MULT_LOOP   ; Continua se ainda há bits para processar
-        
-        ; Resultado final está em A (byte baixo) e Y (byte alto)
-        RTS             ; Retorna para quem chamou
+	EOR	#$CF	
+no_eor:
+	STA	$01		
+	RTS			
 {% include end.html %}
-
-### Para refletir ###
-O que é uma multiplicação, senão uma 
 
 ### Exercícios ###
 
-12. Edite o código acima adicionando comentários em cada linha (com o `;` ), explicando o que acontece na função acima.
+12. Modifique a semente (inicialmente `$20`, ou 32 em decimal, no exemplo) e veja outra sequência sendo gerada. A sequência é unica para cada semente.
+13. Modifique o programa para executar mais 256 após o final da sequência original, sem guardar nenhum valor, para então escrever os pŕoximos 16 valores
+na página de memória seguinte (página `$20`). Repare que a sequência é a mesma que a original, pois o período deste gerador é de exatamente 256 iterações.
+
+
 
 ------------------------------------------------------------
 Daqui para frente, o tutorial está em inglês (por enquanto). 
@@ -548,7 +538,7 @@ da cobrinha, como ficou conhecido aqui Brasil.
 
 <h2 id='snake'>Creating a game</h2>
 
-Now, let's put all this knowledge to good use, and make a game! We're going to
+Now, let's put all this knowledge to good use and make a game! We're going to
 be making a really simple version of the classic game 'Snake'.
 
 Even though this will be a simple version, the code will be substantially larger
@@ -556,7 +546,7 @@ than all the previous examples. We will need to keep track of several memory
 locations together for the various aspects of the game. We can still do
 the necessary bookkeeping throughout the program ourselves, as before, but
 on a larger scale that quickly becomes tedious and can also lead to bugs that
-are difficult to spot. Instead we'll now let the assembler do some of the
+are difficult to spot. Instead, we'll now let the assembler do some of the
 mundane work for us.
 
 In this assembler, we can define descriptive constants (or symbols) that represent
