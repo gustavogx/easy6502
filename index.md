@@ -410,55 +410,64 @@ segundoloop:
   BNE segundoloop
 {% include end.html %}
 
-`X` holds the pixel colour, and `Y` holds the position of the current pixel.
-The first loop draws the current colour as a pixel (via the `A` register),
-pushes the colour to the stack, then increments the colour and position.  The
-second loop pops the stack, draws the popped colour as a pixel, then increments
-the position. As should be expected, this creates a mirrored pattern.
 
+`X` guarda a cor do pixel e `Y` guarda a posição do pixel corrente.
+O primeiro loop pinta um pixel com a cor, através do registro `A`, guarda a cor 
+no topo da pilha e incrementa a posição. O segundo loop recupera o valor no topo
+da pilha e usa esta cor para pintar o pixel, incrementando a sua posição. O resultado: 
+um padrão espelhado. A natureza do stack é recuperar os valores na ordem oposta em que foram armazenados.
 
-<h2 id='jumping'>Jumping</h2>
+### Exercícios ###
 
-Jumping is like branching with two main differences. First, jumps are not
-conditionally executed, and second, they take a two-byte absolute address. For
-small programs, this second detail isn't very important, as you'll mostly be
-using labels, and the assembler works out the correct memory location from the
-label. For larger programs though, jumping is the only way to move from one
-section of the code to another.
+1. Com das instruções `TAX`, `TAY` e suas recíprocas `TXA` e `TYA`, podemos usar o
+o stack para preservar valores dos registros `X` e `Y` durante operações complexas, como em loops.
+Utilize o que aprendeu até agora para pintar um quadrado de 10x10 pixels na tela.
+ 
+
+<h2 id='jumping'>Pulando</h2>
+
+Pular (jump) é como uma ramificação, porém com duas diferenças importantes.
+Primeiro, os saltos não são executados condicionalmente e, segundo, eles ocupam um endereço absoluto de dois bytes. 
+Para programas pequenos, esse segundo detalhe não é muito importante, pois você usará
+principalmente rótulos, e o assembler calcula a localização correta da memória a partir do
+rótulo. Para programas maiores, porém, o salto é a única maneira de passar de uma
+seção do código para outra.
 
 ### JMP ###
 
-`JMP` is an unconditional jump. Here's a really simple example to show it in action:
+`JMP` é um pulo incondicional. Aqui está um exemplo dele em ação:
 
 {% include start.html %}
   LDA #$03
-  JMP there
+  JMP logoali
   BRK
   BRK
   BRK
-there:
+logoali:
   STA $0200
 {% include end.html %}
 
 
 ### JSR/RTS ###
 
-`JSR` and `RTS` ("jump to subroutine" and "return from subroutine") are a
-dynamic duo that you'll usually see used together. `JSR` is used to jump from
-the current location to another part of the code. `RTS` returns to the previous
-position. This is basically like calling a function and returning.
+`JSR` e `RTS` ("jump to subroutine" e "return from subroutine") são uma dupla dinâmica,
+como Batmam e Robin, e você sempre os verá juntos. `JSR` é usado para pular do local 
+atual para outra parte do programa. `RTS` retorna ao endereço original.
+Em outras palavras, é a invenção destas duas instruções que permitiu o nascimento 
+das **funções**.
 
-The processor knows where to return to because `JSR` pushes the address minus
-one of the next instruction onto the stack before jumping to the given
-location. `RTS` pops this location, adds one to it, and jumps to that location.
-An example:
+
+O processador sabe para onde retornar porque `JSR` insere no stack o endereço de onde partiu (um byte antes, na verdade). 
+`RTS` remove esse endeço da pilha, soma um, e salta para esse local, voltando assim para a próxima instrução após o ponto de origem.
+
+Vejamos um exemplo:
 
 {% include start.html %}
   JSR init
   JSR loop
   JSR end
 
-init:
+inicio:
   LDX #$00
   RTS
 
@@ -468,15 +477,70 @@ loop:
   BNE loop
   RTS
 
-end:
+fim:
   BRK
 {% include end.html %}
 
-The first instruction causes execution to jump to the `init` label. This sets
-`X`, then returns to the next instruction, `JSR loop`. This jumps to the `loop`
-label, which increments `X` until it is equal to `$05`. After that we return to
-the next instruction, `JSR end`, which jumps to the end of the file. This
-illustrates how `JSR` and `RTS` can be used together to create modular code.
+A ideia é simples: o programa tem três módulos que são chamados em sequência. Ao final de cada um, a execussão retorna para o ponto original, 
+chamando assim o próximo bloco. Isso ilustra como `JSR` e `RTS` podem ser usados juntos para criar códigos modulares.
+
+O exemplo final: **uma função**
+
+Em computadores modernos, funções usam o stack para passar parâmetros e retornar valores. Na época do 6502 isso era proibitivo pois o stack
+não é muito grande. Mesmo assim, o conceito funciona. Vamos criar uma função que multiplique 2 valores. 
+
+{% include start.html %}
+
+LDA #$20            ; Carrega 32 em A
+PHA                 ; Guarda na pilha
+LDA #$0A            ; Carrega 10 em X
+PHA                 ; Guarda na pilha
+JSR MULTIPLIQUE     ; Call multiply function
+PLA
+TAX                 ; Veja que X vale $01
+PLA                 ; Veja que A vale $40
+BRK
+
+; Resultado $40 e $01, ou $140 (320 em decimal).
+
+MULTIPLIQUE:
+    PLA
+    STA $00         
+    PLA
+    STA $01         
+    
+    LDA #$00        
+    LDY #$00        
+    LDX #$08        
+    
+loop_multiplicacao:
+    LSR $01         
+    BCC pular_soma    
+    
+    CLC             
+    ADC $00         
+    BCC sem_vai_um    
+    INY             
+    
+sem_vai_um:
+pular_soma:
+    ASL $00         
+    BCC sem_extrapolar 
+    ; Handle overflow of multiplicand into high byte
+    SEC             
+    TYA             
+    ADC #$00        
+    TAY             
+    
+sem_extrapolar:
+    DEX             
+    BNE loop_multiplicacao   
+    PHA
+    TYA
+    PHA
+    RTS             
+{% include end.html %}
+
 
 
 <h2 id='snake'>Creating a game</h2>
